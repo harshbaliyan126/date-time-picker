@@ -1,5 +1,7 @@
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import {
+    startOfToday,
     add,
     eachDayOfInterval,
     endOfMonth,
@@ -11,12 +13,16 @@ import {
     parse,
   } from 'date-fns'
 
+import { useState } from 'react'
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Calender({selectedDay, setSelectedDay, currentMonth, setCurrentMonth}) {
-  let colStartClasses = [
+
+  const today = startOfToday();
+  const colStartClasses = [
         '',
         'col-start-2',
         'col-start-3',
@@ -25,9 +31,18 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
         'col-start-6',
         'col-start-7',
    ];
- 
-  let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
+  const arrMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const [selectCalender, setSelectCalender] = useState(true);
+  const [selectMonth, setSelectMonth] = useState(false);
+  // const [selectYear, setSelectYear] = useState(false);
+  const [currm, setcurrm] = useState(format(today, 'LLL'));
+  const [bar, setbar] = useState(true);
+  const [changeComponet, enableAnimations] = useAutoAnimate()
+  const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
 
+  let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
+  // let nameMonth = format(firstDayCurrentMonth, 'LLL');
+  
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
@@ -37,25 +52,40 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
   }
+  function chooseMonth(month) {
+    const monthIdx = arrMonths.indexOf(month);
+    const currMonth = format(firstDayCurrentMonth, 'LLL');
+    const currMonthIdx = arrMonths.indexOf(currMonth);
+    let firstDayNextMonth = add(firstDayCurrentMonth, { months: monthIdx - currMonthIdx });
+    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    setcurrm(currMonth);
+  }
 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
   }
 
+  const handleChooseMonthYear = () => {
+    setSelectCalender(false);
+    setSelectMonth(true);
+    setbar(false);
+  };
+
   return (
-      <div className="max-w-md mx-auto md:max-w-4xl px-6" >
-          <div className="md:m-15 " >
-            <div className="flex items-center">
-              <h2 className="flex-auto font-semibold text-gray-900">
+      <div className="max-w-md mx-auto md:max-w-4xl px-6">
+        {console.log(format(firstDayCurrentMonth, 'MMM-yyyy'), currentMonth)}
+          <div className="md:m-15 ">
+            <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
+              <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
                 {format(firstDayCurrentMonth, 'MMMM yyyy')}
-              </h2>
-              <button
+              </button>
+              {bar && <div className="flex">              
+                <button
                 type="button"
                 onClick={previousMonth}
                 className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
-                {/* <span className="sr-only">Previous month</span> */}
                 <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" /> 
               </button>
               <button
@@ -63,11 +93,13 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
                 type="button"
                 className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
-                {/* <span className="sr-only">Next month</span> */}
                 <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
               </button>
+              </div> }
             </div>
-            <div className="grid grid-cols-7 mt-10 text-xs leading-6 text-center text-gray-500">
+            <div ref={changeComponet}>
+            { selectCalender && <div >
+            <div className="grid grid-cols-7 mt-5 text-xs leading-6 text-center text-gray-500">
               <div>S</div>
               <div>M</div>
               <div>T</div>
@@ -76,7 +108,7 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid grid-cols-7 mt-2 text-sm">
+            <div className="grid grid-cols-7 mt-2 text-sm mx-2" ref={changeCalender}>
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
@@ -119,6 +151,33 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
                   </button>
                 </div>
               ))}
+              </div>
+            </div> }
+          {/* { selectYear && <div>
+            </div>} */}
+          { selectMonth && <div className="grid grid-cols-3 mt-2 text-sm">
+            {arrMonths.map((month) => (
+                <div key={month} > 
+                  <button
+                    type="button"
+                    onClick={() => {
+                        chooseMonth(month);
+                        setSelectMonth(!selectMonth);
+                        setSelectCalender(!selectCalender);
+                        setbar(true);
+                    }}
+                    className={classNames(
+                        month !== currm && 'hover:bg-gray-200',
+                      ( (month === currm || month === format(today, 'LLL') ) &&
+                        'font-semibold',
+                      'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
+                    ))}
+                  > 
+                  {month}
+                  </button>
+                </div>
+              ))}
+            </div> }
             </div>
           </div>
         </div>

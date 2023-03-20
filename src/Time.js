@@ -24,7 +24,7 @@ export default function Time({ hourSelected, minuteSelected, ampmSelected, setho
     <div className="flex mx-auto px-auto pb-2 w-max">
       <Listbox value={hourSelected} onChange={(e) => {
           sethourSelected(e);
-          setTime(`${e}:${minuteSelected}:${ampmSelected}`);
+          setTime(`${e}:${minuteSelected} ${ampmSelected}`);
         }} >
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-5 pr-5 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -72,7 +72,7 @@ export default function Time({ hourSelected, minuteSelected, ampmSelected, setho
       <span className="m-2 pb-2">:</span>
       <Listbox value={minuteSelected} onChange={ (e) => {
           setminuteSelected(e);
-          setTime(`${hourSelected}:${e}:${ampmSelected}`);
+          setTime(`${hourSelected}:${e} ${ampmSelected}`);
         }} >
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-5 pr-5 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -120,7 +120,7 @@ export default function Time({ hourSelected, minuteSelected, ampmSelected, setho
 
       <Listbox value={ampmSelected} onChange={(e) => {
           setampmSelected(e);
-          setTime(`${hourSelected}:${minuteSelected}:${e}`);
+          setTime(`${hourSelected}:${minuteSelected} ${e}`);
         }} >
         <div className="relative mt-1 ml-3 pt-0.3">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-5 pr-5 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">

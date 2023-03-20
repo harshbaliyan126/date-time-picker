@@ -17,7 +17,7 @@ export default function Datetimepicker() {
   const [checktrue, setchecktrue] = useState(false);
   const [checkDateTimePicker, setcheckDateTimePicker] = useState(false);
   const [parent] = useAutoAnimate(/* optional config */)
-  const [calender] = useAutoAnimate(/* optional config */)
+  const [changeRange] = useAutoAnimate(/* optional config */)
 
   let today = startOfToday();
 
@@ -29,28 +29,52 @@ export default function Datetimepicker() {
   const [endselectedDay, setendSelectedDay] = useState(today);
   const [endcurrentMonth, setendCurrentMonth] = useState(format(today, 'MMM-yyyy'));
 
-  const [startTime, setstartTime] = useState(null);
-  const [startTimehr, setstartTimehr] = useState('00');
+  const [startTime, setstartTime] = useState('12:00 AM');
+  const [startTimehr, setstartTimehr] = useState('12');
   const [startTimemin, setstartTimemin] = useState('00');
   const [startTimeap, setstartTimeap] = useState('AM');
 
-  const [endTime, setendTime] = useState(null);
-  const [endTimehr, setendTimehr] = useState('00');
+  const [endTime, setendTime] = useState('12:00 AM');
+  const [endTimehr, setendTimehr] = useState('12');
   const [endTimemin, setendTimemin] = useState('00');
   const [endTimeap, setendTimeap] = useState('AM');
 
+  function convertTwelevetoTwentyFour(hour, min, ap) {
+    if (ap === 'AM') {
+      if (hour === '12') {
+        return `00:${min}`;
+      }
+      else {
+        return `${hour}:${min}`;
+      }
+    }
+    else {
+      if (hour === '12') {
+        return `${hour}:${min}`;
+      }
+      else {
+        return `${parseInt(hour) + 12}:${min}`;
+      }
+    }
+  }
+
   const handleSetClick = () => {
-    const start = format(startselectedDay, 'dd/MM/yyyy');
-    const end = format(endselectedDay, 'dd/MM/yyyy');
+    let start = format(startselectedDay, 'dd/MM/yyyy');
+    let end = format(endselectedDay, 'dd/MM/yyyy');
     setstartDate(start);
     setcheckDateTimePicker(false);
 
-    if(isAfter(startselectedDay, endselectedDay))
+    if(isAfter(startselectedDay, endselectedDay)){
         setendDate(start);
-    else
+        end = start; 
+      }
+    else{
       setendDate(end);
+    }
+    const s_time = convertTwelevetoTwentyFour(startTimehr, startTimemin, startTimeap);
+    const e_time = convertTwelevetoTwentyFour(endTimehr, endTimemin, endTimeap);
 
-    if(startDate === endDate && startTime > endTime)
+    if( start === end && s_time > e_time)
         setendTime(startTime);
 
     setchecktrue(true);
@@ -59,14 +83,14 @@ export default function Datetimepicker() {
   const changeToOriginal = () => {
     setstartDate(null);
     setendDate(null);
-    setstartTime(null);
-    setendTime(null);
+    setstartTime('12:00 AM');
+    setendTime('12:00 AM');
     setstartSelectedDay(today);
     setendSelectedDay(today);
     setstartCurrentMonth(format(today, 'MMM-yyyy'));
     setendCurrentMonth(format(today, 'MMM-yyyy'));
-    setstartTimehr('00');
-    setendTimehr('00');
+    setstartTimehr('12');
+    setendTimehr('12');
     setstartTimemin('00');
     setendTimemin('00');
     setstartTimeap('AM');
@@ -111,7 +135,7 @@ export default function Datetimepicker() {
                 End
               </Tab>
             </Tab.List>
-            <Tab.Panels className="mt-2" ref={calender}>
+            <Tab.Panels className="mt-2" ref={changeRange}>
               <Tab.Panel>
                 <Calender selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} />
                 <Time hourSelected={startTimehr} sethourSelected={setstartTimehr} minuteSelected={startTimemin} setminuteSelected={setstartTimemin} ampmSelected={startTimeap} setampmSelected={setstartTimeap} setTime={setstartTime} />
