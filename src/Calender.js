@@ -169,7 +169,7 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
                       !isEqual(day, selectedDay) && 'hover:bg-gray-200',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
-                      'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
+                      'mx-auto flex h-8 w-8 border-2 items-center justify-center rounded-xl' 
                     )}
                   >
                     <time dateTime={format(day, 'yyyy-MM-dd')}>

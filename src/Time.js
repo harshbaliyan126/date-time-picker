@@ -21,7 +21,7 @@ const hour = hr.map((value, index) => {
 export default function Time({ hourSelected, minuteSelected, ampmSelected, sethourSelected, setminuteSelected, setampmSelected , setTime}) {
 
   return (
-    <div className="flex mx-auto px-auto pb-2 w-max">
+    <div className="flex mx-auto px-auto py-2 w-max">
       <Listbox value={hourSelected} onChange={(e) => {
           sethourSelected(e);
           setTime(`${e}:${minuteSelected} ${ampmSelected}`);
