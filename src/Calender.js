@@ -11,6 +11,8 @@ import {
     isSameMonth,
     isToday,
     parse,
+    eachYearOfInterval,
+    getDecade,
   } from 'date-fns'
 
 import { useState } from 'react'
@@ -34,15 +36,24 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
   const arrMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const [selectCalender, setSelectCalender] = useState(true);
   const [selectMonth, setSelectMonth] = useState(false);
-  // const [selectYear, setSelectYear] = useState(false);
+  const [selectYear, setSelectYear] = useState(false);
   const [currm, setcurrm] = useState(format(today, 'LLL'));
   const [bar, setbar] = useState(true);
+  const [yearbar, setyearbar] = useState(false);
   const [changeComponet, enableAnimations] = useAutoAnimate()
   const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
 
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
   // let nameMonth = format(firstDayCurrentMonth, 'LLL');
-  
+  const [firstYearofDecade, setfirstYearofDecade ]= useState(new Date(getDecade(firstDayCurrentMonth), 1, 1));
+  const [LastYearofDecade, setLastYearofDecade] = useState(new Date(getDecade(firstDayCurrentMonth) + 11 , 1, 1));
+
+  let years = eachYearOfInterval({
+    start: firstYearofDecade,
+    end: LastYearofDecade,
+  })
+
+
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
@@ -52,6 +63,21 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
   }
+
+  function previousYear(){
+    let firstYearBeforeDecade = add(firstYearofDecade, { years: -1 });
+    let lastYearBeforeDecade = add(LastYearofDecade, { years: -1 });
+    setfirstYearofDecade(firstYearBeforeDecade);
+    setLastYearofDecade(lastYearBeforeDecade);
+  }
+
+  function nextYear(){
+    let firstYearAfterDecade = add(firstYearofDecade, { years: 1 });
+    let lastYearAfterDecade = add(LastYearofDecade, { years: 1 });
+    setfirstYearofDecade(firstYearAfterDecade);
+    setLastYearofDecade(lastYearAfterDecade);
+  }
+
   function chooseMonth(month) {
     const monthIdx = arrMonths.indexOf(month);
     const currMonth = format(firstDayCurrentMonth, 'LLL');
@@ -68,13 +94,14 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
 
   const handleChooseMonthYear = () => {
     setSelectCalender(false);
-    setSelectMonth(true);
-    setbar(false);
+    setSelectYear(true);
+    // setSelectMonth(true);
+    // setbar(false)
+    setyearbar(true)  
   };
 
   return (
       <div className="max-w-md mx-auto md:max-w-4xl px-6">
-        {console.log(format(firstDayCurrentMonth, 'MMM-yyyy'), currentMonth)}
           <div className="md:m-15 ">
             <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
               <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
@@ -83,13 +110,13 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
               {bar && <div className="flex">              
                 <button
                 type="button"
-                onClick={previousMonth}
+                onClick={ yearbar ? previousYear : previousMonth}
                 className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
                 <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" /> 
               </button>
               <button
-                onClick={nextMonth}
+                onClick={ yearbar ? nextYear : nextMonth}
                 type="button"
                 className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
@@ -153,8 +180,25 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
               ))}
               </div>
             </div> }
-          {/* { selectYear && <div>
-            </div>} */}
+          { selectYear && <div className="grid grid-cols-3 mt-2 text-sm">
+          {years.map((year, yearIdx) => (
+                <div key={year.toString()} > 
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectYear(!selectYear);
+                      setSelectMonth(true);
+                      setCurrentMonth(currm+'-'+format(year, 'yyyy'));
+                      setyearbar(false);
+                      setbar(false);
+                    }}
+                    className="hover:bg-gray-200 mx-auto flex h-8 w-8 items-center justify-center rounded-full"
+                  >
+                      {format(year, 'yyyy')}
+                  </button>
+                </div>
+              ))}
+            </div>}
           { selectMonth && <div className="grid grid-cols-3 mt-2 text-sm">
             {arrMonths.map((month) => (
                 <div key={month} > 
@@ -162,7 +206,7 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
                     type="button"
                     onClick={() => {
                         chooseMonth(month);
-                        setSelectMonth(!selectMonth);
+                        setSelectMonth(false);
                         setSelectCalender(!selectCalender);
                         setbar(true);
                     }}

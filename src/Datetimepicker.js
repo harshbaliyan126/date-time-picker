@@ -99,7 +99,7 @@ export default function Datetimepicker() {
 
   return (
     <div className="shadow-2xl rounder-lg flex justify-center items-center h-screen">
-      <div className="max-w-md px-4 mx-auto sm:px-7 h-screen md:max-w-4xl md:px-6" >
+      <div className="max-w-md px-4 mx-auto border-3 sm:px-7 h-screen md:max-w-4xl md:px-6" >
         <div className="flex justify-center p-2 m-2">
           <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center" onClick={() => {
             setcheckDateTimePicker(!checkDateTimePicker);
