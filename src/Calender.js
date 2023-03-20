@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import {
     add,
@@ -10,14 +9,13 @@ import {
     isSameMonth,
     isToday,
     parse,
-    startOfToday,
   } from 'date-fns'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Calender() {
+export default function Calender({selectedDay, setSelectedDay, currentMonth, setCurrentMonth}) {
   let colStartClasses = [
         '',
         'col-start-2',
@@ -27,9 +25,7 @@ export default function Calender() {
         'col-start-6',
         'col-start-7',
    ];
-  let today = startOfToday()
-  let [selectedDay, setSelectedDay] = useState(today)
-  let [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'))
+ 
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
 
   let days = eachDayOfInterval({
@@ -48,9 +44,8 @@ export default function Calender() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6">
-          <div className="shadow-2xl px-8 py-8 md:m-15 ">
+      <div className="max-w-md mx-auto md:max-w-4xl px-6" >
+          <div className="md:m-15 " >
             <div className="flex items-center">
               <h2 className="flex-auto font-semibold text-gray-900">
                 {format(firstDayCurrentMonth, 'MMMM yyyy')}
@@ -60,7 +55,7 @@ export default function Calender() {
                 onClick={previousMonth}
                 className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
-                <span className="sr-only">Previous month</span>
+                {/* <span className="sr-only">Previous month</span> */}
                 <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" /> 
               </button>
               <button
@@ -68,7 +63,7 @@ export default function Calender() {
                 type="button"
                 className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
               >
-                <span className="sr-only">Next month</span>
+                {/* <span className="sr-only">Next month</span> */}
                 <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
@@ -89,10 +84,12 @@ export default function Calender() {
                     dayIdx === 0 && colStartClasses[getDay(day)],
                     'py-1.5'
                   )}
-                >
+                > 
                   <button
                     type="button"
-                    onClick={() => setSelectedDay(day)}
+                    onClick={() => {
+                      setSelectedDay(day);
+                    }}
                     className={classNames(
                       isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
@@ -125,7 +122,6 @@ export default function Calender() {
             </div>
           </div>
         </div>
-      </div>
   )
 }
 

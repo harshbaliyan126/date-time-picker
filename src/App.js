@@ -1,10 +1,10 @@
-import Calender from "./Calender";
-function App() {
+import Datetimepicker from "./Datetimepicker";
+
+export default function App() {
   return (
-    <div className="App">
-      <Calender />
+    <div className="container mx-auto px-auto">
+      <Datetimepicker />
     </div>
   );
 }
 
-export default App;
