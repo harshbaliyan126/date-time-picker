@@ -135,7 +135,7 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid grid-cols-7 mt-2 text-sm mx-2" ref={changeCalender}>
+            <div className="grid grid-cols-7 mt-2 text-sm mx-1" ref={changeCalender}>
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
@@ -169,7 +169,7 @@ export default function Calender({selectedDay, setSelectedDay, currentMonth, set
                       !isEqual(day, selectedDay) && 'hover:bg-gray-200',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
-                      'mx-auto flex h-8 w-8 border-2 items-center justify-center rounded-xl' 
+                      'mx-1 flex h-8 w-8 border-2 items-center justify-center rounded-xl' 
                     )}
                   >
                     <time dateTime={format(day, 'yyyy-MM-dd')}>

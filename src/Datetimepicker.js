@@ -21,11 +21,11 @@ export default function Datetimepicker() {
 
   let today = startOfToday();
 
-  const [startDate, setstartDate] = useState(null);
+  const [startDate, setstartDate] = useState(false);
   const [startselectedDay, setstartSelectedDay] = useState(today);
   const [startcurrentMonth, setstartCurrentMonth] = useState(format(today, 'MMM-yyyy'));
 
-  const [endDate, setendDate] = useState(null);
+  const [endDate, setendDate] = useState(false);
   const [endselectedDay, setendSelectedDay] = useState(today);
   const [endcurrentMonth, setendCurrentMonth] = useState(format(today, 'MMM-yyyy'));
 
@@ -123,7 +123,7 @@ export default function Datetimepicker() {
                   ? 'bg-white shadow'
                   : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
               )}>
-                Start
+                <div>Start</div> <div>{format(startselectedDay, 'dd/MM/yyyy')}</div>
               </Tab>
               <Tab className={({ selected }) => classNames(
                 'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
@@ -132,7 +132,7 @@ export default function Datetimepicker() {
                   ? 'bg-white shadow'
                   : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
               )}>
-                End
+                <div>End</div> <div>{format(endselectedDay, 'dd/MM/yyyy')}</div>
               </Tab>
             </Tab.List>
             <Tab.Panels className="mt-2" ref={changeRange}>
