@@ -1,5 +1,5 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 
 const hr = [ '01','02','03','04','05','06','07','08','09','10','11','12' ]
@@ -21,7 +21,7 @@ const hour = hr.map((value, index) => {
 export default function Time({ hourSelected, minuteSelected, ampmSelected, sethourSelected, setminuteSelected, setampmSelected , setTime}) {
 
   return (
-    <div className="flex ml-4 p-2 w-45">
+    <div className="flex mx-auto px-auto pb-2 w-max">
       <Listbox value={hourSelected} onChange={(e) => {
           sethourSelected(e);
           setTime(`${e}:${minuteSelected}:${ampmSelected}`);
