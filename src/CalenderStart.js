@@ -13,6 +13,8 @@ import {
     parse,
     eachYearOfInterval,
     getDecade,
+    isAfter,
+    isBefore
   } from 'date-fns'
 
 import { useState } from 'react'
@@ -21,7 +23,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth}) {
+export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth,sed}) {
 
   const today = startOfToday();
   const colStartClasses = [
@@ -150,6 +152,8 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                       setSelectedDay(day);
                     }}
                     className={classNames(
+                      isAfter(day, selectedDay) && isBefore(day, sed) && 'bg-blue-200',
+                      isBefore(selectedDay, sed) && isEqual(day, sed) && !isToday(day) && 'bg-gray-900 text-white',
                       isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
@@ -166,7 +170,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                       isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         'bg-gray-900',
-                      !isEqual(day, selectedDay) && 'hover:bg-gray-200',
+                      !isEqual(day, selectedDay) && !isEqual(day, sed) && 'hover:bg-gray-200',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
                       'mx-1 flex h-8 w-8 border-2 items-center justify-center rounded-xl' 

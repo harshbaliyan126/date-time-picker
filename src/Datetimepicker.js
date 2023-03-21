@@ -132,7 +132,7 @@ export default function Datetimepicker() {
             </Tab.List>
             <Tab.Panels className="mt-2" ref={changeRange}>
               <Tab.Panel>
-                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} />
+                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} sed={endselectedDay}/>
                 <Time hourSelected={startTimehr} sethourSelected={setstartTimehr} minuteSelected={startTimemin} setminuteSelected={setstartTimemin} ampmSelected={startTimeap} setampmSelected={setstartTimeap} setTime={setstartTime} />
               </Tab.Panel>
               <Tab.Panel>

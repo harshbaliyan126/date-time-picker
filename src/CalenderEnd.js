@@ -13,7 +13,8 @@ import {
     parse,
     eachYearOfInterval,
     getDecade,
-    isAfter
+    isAfter,
+    isBefore
   } from 'date-fns'
 
 import { useState } from 'react'
@@ -156,6 +157,9 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
                       }
                     }}
                     className={classNames(
+                      isBefore(day, selectedDay) && isAfter(day, ssd) && 'bg-blue-200',
+                      isAfter(selectedDay, ssd) && isEqual(day, ssd) && !isToday(day) && 'bg-gray-900 text-white',
+                      isEqual(day, ssd) && isToday(day) && 'bg-red-500 text-white',
                       isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
