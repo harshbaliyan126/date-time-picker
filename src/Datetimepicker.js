@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Tab } from '@headlessui/react';
-import Calender from "./Calender";
+import CalenderStart from "./CalenderStart";
+import CalenderEnd from "./CalenderEnd"
 import Time from "./Time";
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import {
   format,
   startOfToday,
-  isAfter,
 } from 'date-fns';
 
 function classNames(...classes) {
@@ -18,6 +18,7 @@ export default function Datetimepicker() {
   const [checkDateTimePicker, setcheckDateTimePicker] = useState(false);
   const [parent] = useAutoAnimate(/* optional config */)
   const [changeRange] = useAutoAnimate(/* optional config */)
+  // const [ssd, setssd] = useState();
 
   let today = startOfToday();
 
@@ -64,13 +65,7 @@ export default function Datetimepicker() {
     setstartDate(start);
     setcheckDateTimePicker(false);
 
-    if(isAfter(startselectedDay, endselectedDay)){
-        setendDate(start);
-        end = start; 
-      }
-    else{
-      setendDate(end);
-    }
+    setendDate(end);
     const s_time = convertTwelevetoTwentyFour(startTimehr, startTimemin, startTimeap);
     const e_time = convertTwelevetoTwentyFour(endTimehr, endTimemin, endTimeap);
 
@@ -137,11 +132,11 @@ export default function Datetimepicker() {
             </Tab.List>
             <Tab.Panels className="mt-2" ref={changeRange}>
               <Tab.Panel>
-                <Calender selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} />
+                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} />
                 <Time hourSelected={startTimehr} sethourSelected={setstartTimehr} minuteSelected={startTimemin} setminuteSelected={setstartTimemin} ampmSelected={startTimeap} setampmSelected={setstartTimeap} setTime={setstartTime} />
               </Tab.Panel>
               <Tab.Panel>
-                <Calender selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} />
+                <CalenderEnd selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} ssd={startselectedDay}/>
                 <Time hourSelected={endTimehr} sethourSelected={setendTimehr} minuteSelected={endTimemin} setminuteSelected={setendTimemin} ampmSelected={endTimeap} setampmSelected={setendTimeap} setTime={setendTime} />
               </Tab.Panel>
             </Tab.Panels>
