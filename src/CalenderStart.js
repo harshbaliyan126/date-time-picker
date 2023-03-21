@@ -149,7 +149,13 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedDay(day);
+                      // setSelectedDay(day);
+                       if(isAfter(day, sed)){
+                         setSelectedDay(sed);
+                      }
+                      else{
+                          setSelectedDay(day);
+                      }
                     }}
                     className={classNames(
                       isAfter(day, selectedDay) && isBefore(day, sed) && 'bg-blue-200',
@@ -166,7 +172,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-400',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
+                      (isEqual(day, selectedDay) || isEqual(day, sed)) && isToday(day) && 'bg-red-500 text-white',
                       isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         'bg-gray-900',
