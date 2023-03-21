@@ -55,7 +55,6 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
     end: LastYearofDecade,
   })
 
-
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
@@ -81,9 +80,9 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   }
 
   function chooseMonth(month) {
-    const monthIdx = arrMonths.indexOf(month);
-    const currMonth = format(firstDayCurrentMonth, 'LLL');
-    const currMonthIdx = arrMonths.indexOf(currMonth);
+    let monthIdx = arrMonths.indexOf(month);
+    let currMonth = format(firstDayCurrentMonth, 'LLL');
+    let currMonthIdx = arrMonths.indexOf(currMonth);
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: monthIdx - currMonthIdx });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(currMonth);
@@ -96,8 +95,9 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
 
   const handleChooseMonthYear = () => {
     setSelectCalender(false);
-    setSelectYear(true);
-    // setSelectMonth(true);
+    if(!selectYear)
+      setSelectYear(true);
+    setSelectMonth(false);
     // setbar(false)
     setyearbar(true)  
   };
@@ -107,7 +107,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
           <div className="md:m-15 ">
             <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
               <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
-                {format(firstDayCurrentMonth, 'MMMM yyyy')}
+                  { selectCalender ? format(firstDayCurrentMonth, 'MMMM yyyy') : selectYear ? format(firstDayCurrentMonth, 'MMMM yyyy') : format(firstDayCurrentMonth, 'yyyy') }
               </button>
               {bar && <div className="flex">              
                 <button
@@ -196,9 +196,9 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectYear(!selectYear);
+                      setSelectYear(false);
                       setSelectMonth(true);
-                      setCurrentMonth(currm+'-'+format(year, 'yyyy'));
+                      // setCurrentMonth(currm+'-'+format(year, 'yyyy'));;;;
                       setyearbar(false);
                       setbar(false);
                     }}

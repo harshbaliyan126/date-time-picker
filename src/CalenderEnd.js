@@ -96,8 +96,9 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
 
   const handleChooseMonthYear = () => {
     setSelectCalender(false);
-    setSelectYear(true);
-    // setSelectMonth(true);
+    if(!selectYear)
+      setSelectYear(true);
+    setSelectMonth(false);
     // setbar(false)
     setyearbar(true)  
   };
@@ -107,7 +108,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
           <div className="md:m-15 ">
             <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
               <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
-                {format(firstDayCurrentMonth, 'MMMM yyyy')} 
+              { selectCalender ? format(firstDayCurrentMonth, 'MMMM yyyy') : selectYear ? format(firstDayCurrentMonth, 'MMMM yyyy') : format(firstDayCurrentMonth, 'yyyy') }
               </button>
               {bar && <div className="flex">              
                 <button
@@ -198,7 +199,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
                     onClick={() => {
                       setSelectYear(!selectYear);
                       setSelectMonth(true);
-                      setCurrentMonth(currm+'-'+format(year, 'yyyy'));
+                      // setCurrentMonth(currm+'-'+format(year, 'yyyy'));
                       setyearbar(false);
                       setbar(false);
                     }}
