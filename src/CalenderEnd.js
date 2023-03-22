@@ -64,6 +64,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
   function previousMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
   function previousYear(){
@@ -91,7 +92,8 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+    setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
   const handleChooseMonthYear = () => {

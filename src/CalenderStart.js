@@ -46,6 +46,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
 
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
+  
   // let nameMonth = format(firstDayCurrentMonth, 'LLL');
   const [firstYearofDecade, setfirstYearofDecade ]= useState(new Date(getDecade(firstDayCurrentMonth), 1, 1));
   const [LastYearofDecade, setLastYearofDecade] = useState(new Date(getDecade(firstDayCurrentMonth) + 11 , 1, 1));
@@ -63,6 +64,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   function previousMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
   function previousYear(){
@@ -91,6 +93,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
   const handleChooseMonthYear = () => {
