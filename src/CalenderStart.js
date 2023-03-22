@@ -198,7 +198,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                     onClick={() => {
                       setSelectYear(false);
                       setSelectMonth(true);
-                      // setCurrentMonth(currm+'-'+format(year, 'yyyy'));;;;
+                      setCurrentMonth(currm+'-'+format(year, 'yyyy'))
                       setyearbar(false);
                       setbar(false);
                     }}

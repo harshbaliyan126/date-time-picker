@@ -199,7 +199,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
                     onClick={() => {
                       setSelectYear(!selectYear);
                       setSelectMonth(true);
-                      // setCurrentMonth(currm+'-'+format(year, 'yyyy'));
+                      setCurrentMonth(currm+'-'+format(year, 'yyyy'));
                       setyearbar(false);
                       setbar(false);
                     }}
