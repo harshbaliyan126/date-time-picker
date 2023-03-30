@@ -91,7 +91,6 @@ export default function Datetimepicker() {
 
     if( start === end && s_time > e_time)
         setendTime(startTime);
-
     setchecktrue(true);
   };
 
@@ -112,8 +111,7 @@ export default function Datetimepicker() {
     setendTimeap('AM');
   };
 
-  const [show, setshow] = useState(false);
-  const reveal = () => setshow(!show);
+  const disabled = startselectedDay && endselectedDay ? false : true;
 
   return (
     <>
@@ -165,7 +163,7 @@ export default function Datetimepicker() {
             </Tab.Panels>
           </Tab.Group>
           <div className="flex justify-end pb-4 pr-4">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" onClick={handleSetClick}>
+            <button disabled={disabled} className={classNames("text-white font-bold py-2 px-4 rounded", disabled ? "bg-blue-200": "bg-blue-500 hover:bg-blue-700")} onClick={handleSetClick}>
               Set
             </button>
             <div className="pl-2">
