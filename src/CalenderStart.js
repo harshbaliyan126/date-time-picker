@@ -23,7 +23,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth,sed}) {
+export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth,sed , setSed, setSelectedIndex}) {
 
   const today = startOfToday();
   const colStartClasses = [
@@ -106,7 +106,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   };
 
   return (
-      <div className="max-w-md mx-auto md:max-w-4xl px-6">
+      <div className="max-w-md mx-auto md:max-w-4xl px-2">
           <div className="md:m-15 ">
             <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
               <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
@@ -132,7 +132,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
             <div ref={changeComponet}>
             { selectCalender && <div >
             <div className="grid grid-cols-7 mt-5 text-xs leading-6 text-center text-gray-500">
-              <div>S</div>
+              <div className='mx-0.5'>S</div>
               <div>M</div>
               <div>T</div>
               <div>W</div>
@@ -140,55 +140,55 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid grid-cols-7 mt-2 text-sm mx-1" ref={changeCalender}>
+            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2 " ref={changeCalender}>
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
                   className={classNames(
-                    dayIdx === 0 && colStartClasses[getDay(day)],
-                    'py-1.5'
+                    dayIdx === 0 && colStartClasses[getDay(day)]
                   )}
                 > 
+                <div className={classNames( selectedDay && (isAfter(day, selectedDay) && isBefore(day, sed)) && 'border-x-2 bg-blue-200 border-blue-200',
+                    selectedDay && sed != null && isEqual(day, selectedDay) && !isEqual(selectedDay, sed) && 'bgl',
+                     sed && selectedDay != null && !isEqual(selectedDay, sed) && isEqual(day, sed) && 'bgr'
+                )}>
                   <button
                     type="button"
                     onClick={() => {
                       // setSelectedDay(day);
-                       if(isAfter(day, sed)){
-                         setSelectedDay(sed);
+                       if(sed && isAfter(day, sed)){
+                         setSed(null);
                       }
-                      else{
-                          setSelectedDay(day);
-                      }
+                      setSelectedDay(day);
+                      setSelectedIndex(1);
                     }}
                     className={classNames(
-                      isAfter(day, selectedDay) && isBefore(day, sed) && 'bg-blue-200',
-                      isBefore(selectedDay, sed) && isEqual(day, sed) && !isToday(day) && 'bg-gray-900 text-white',
-                      isEqual(day, selectedDay) && 'text-white',
+                      sed && isEqual(day, sed) && !isToday(day) && 'bg-blue-500 text-white font-semibold',
+                      selectedDay && isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
                         isToday(day) &&
                         'text-red-500',
-                      !isEqual(day, selectedDay) &&
+                      selectedDay && !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-900',
-                      !isEqual(day, selectedDay) &&
+                      selectedDay && !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-400',
-                      (isEqual(day, selectedDay) || isEqual(day, sed)) && isToday(day) && 'bg-red-500 text-white',
-                      isEqual(day, selectedDay) &&
+                     (isEqual(day, selectedDay) || isEqual(day, sed)) && isToday(day) && 'bg-red-500 text-white',
+                      selectedDay && isEqual(day, selectedDay) &&
                         !isToday(day) &&
-                        'bg-gray-900',
-                      !isEqual(day, selectedDay) && !isEqual(day, sed) && 'hover:bg-gray-200',
+                        'bg-blue-500',
+                      selectedDay && sed && !isEqual(day, selectedDay) && !isEqual(day, sed) && 'hover:bg-blue-300',
                       (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
-                      'mx-1 flex h-8 w-8 border-2 items-center justify-center rounded-xl' 
+                      'mx-auto my-auto flex h-8 w-8 justify-center items-center rounded-full' 
                     )}
                   >
-                    <time dateTime={format(day, 'yyyy-MM-dd')}>
-                      {format(day, 'd')}
-                    </time>
+                     {format(day, 'd')}
                   </button>
+                  </div>
                 </div>
               ))}
               </div>

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import CalenderStart from "./CalenderStart";
 import CalenderEnd from "./CalenderEnd"
 import Time from "./Time";
-import { useAutoAnimate } from '@formkit/auto-animate/react'
+import  autoAnimate  from '@formkit/auto-animate';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import {
   format,
   startOfToday,
@@ -18,27 +19,41 @@ export default function Datetimepicker() {
   const [checktrue, setchecktrue] = useState(false);
   const [checkDateTimePicker, setcheckDateTimePicker] = useState(false);
 
+  const changeRange = useRef(null);
   const [parent] = useAutoAnimate(/* optional config */)
-  const [changeRange] = useAutoAnimate(/* optional config */)
-  // const [ssd, setssd] = useState();
+ // const [ssd, setssd] = useState();
+
+  // useEffect(() => {
+  //   console.log(changeRange);
+  //     changeRange.current && autoAnimate(changeRange.current)
+  // }, [changeRange]);
 
   let today = startOfToday();
 
   useEffect(() => {
-    if(!selectedIndex){
+
+    if(selectedIndex && startselectedDay)
       setstartCurrentMonth(format(startselectedDay, 'MMM-yyyy'));
-    }
-    else{
+    else if(endselectedDay)
       setendCurrentMonth(format(endselectedDay, 'MMM-yyyy'));
-    }
+
+    if(startselectedDay && endselectedDay &&  format(startselectedDay, 'MM') !== format(endselectedDay, 'MM'))
+      changeRange.current && autoAnimate(changeRange.current)
+    else
+      changeRange.current && autoAnimate(changeRange.current, {
+        duration: 0,
+      })
+   
   }, [selectedIndex]);
 
+
+
   const [startDate, setstartDate] = useState(false);
-  const [startselectedDay, setstartSelectedDay] = useState(today);
+  const [startselectedDay, setstartSelectedDay] = useState(null);
   const [startcurrentMonth, setstartCurrentMonth] = useState(format(today, 'MMM-yyyy'));
 
   const [endDate, setendDate] = useState(false);
-  const [endselectedDay, setendSelectedDay] = useState(today);
+  const [endselectedDay, setendSelectedDay] = useState(null);
   const [endcurrentMonth, setendCurrentMonth] = useState(format(today, 'MMM-yyyy'));
 
   const [startTime, setstartTime] = useState('12:00 AM');
@@ -91,8 +106,8 @@ export default function Datetimepicker() {
     setendDate(null);
     setstartTime('12:00 AM');
     setendTime('12:00 AM');
-    setstartSelectedDay(today);
-    setendSelectedDay(today);
+    setstartSelectedDay(null);
+    setendSelectedDay(null);
     setstartCurrentMonth(format(today, 'MMM-yyyy'));
     setendCurrentMonth(format(today, 'MMM-yyyy'));
     setstartTimehr('12');
@@ -103,13 +118,16 @@ export default function Datetimepicker() {
     setendTimeap('AM');
   };
 
+  const [show, setshow] = useState(false);
+  const reveal = () => setshow(!show);
+
   return (
-    <div className="shadow-2xl rounder-lg flex justify-center items-center h-screen">
-      <div className="max-w-md px-4 mx-auto border-3 sm:px-7 h-screen md:max-w-4xl md:px-6" >
+    <>
         <div className="flex justify-center p-2 m-2">
           <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center" onClick={() => {
             setcheckDateTimePicker(!checkDateTimePicker);
             changeToOriginal();
+            setSelectedIndex(0);
             setchecktrue(false);
           }}>
             {checktrue && `${startDate} ${startTime} - ${endDate} ${endTime}`}
@@ -119,7 +137,7 @@ export default function Datetimepicker() {
             </svg>
           </button>
         </div>
-        {checkDateTimePicker && <div className="shadow-2xl rounder-3xl w-full max-w-md  mx-auto" ref={parent}>
+        { checkDateTimePicker && <div className="rounded-3xl shadow-2xl w-full max-w-xs mx-auto px-2 py-2" ref={parent}>
           <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex} >
             <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1 ">
               <Tab className={({ selected }) => classNames(
@@ -129,7 +147,7 @@ export default function Datetimepicker() {
                   ? 'bg-white shadow'
                   : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
               )}>
-                <div>Start</div> <div>{format(startselectedDay, 'dd/MM/yyyy')}</div>
+                <div>Start</div> { startselectedDay ? <div>{format(startselectedDay, 'dd/MM/yyyy')}</div> : <div>Please Select</div>  }
               </Tab>
               <Tab className={({ selected }) => classNames(
                 'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
@@ -138,16 +156,16 @@ export default function Datetimepicker() {
                   ? 'bg-white shadow'
                   : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
               )}>
-                <div>End</div> <div>{format(endselectedDay, 'dd/MM/yyyy')}</div>
+                <div>End</div> {endselectedDay ? <div>{format(endselectedDay, 'dd/MM/yyyy')}</div> : <div>Please Select</div>}
               </Tab>
             </Tab.List>
-            <Tab.Panels className="mt-2" ref={changeRange}>
-              <Tab.Panel>
-                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} sed={endselectedDay}/>
+            <Tab.Panels className="mt-2" ref={changeRange}> 
+              <Tab.Panel >
+                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} sed={endselectedDay} setSed={setendSelectedDay} setSelectedIndex={setSelectedIndex}/>
                 <Time hourSelected={startTimehr} sethourSelected={setstartTimehr} minuteSelected={startTimemin} setminuteSelected={setstartTimemin} ampmSelected={startTimeap} setampmSelected={setstartTimeap} setTime={setstartTime} />
               </Tab.Panel>
-              <Tab.Panel>
-                <CalenderEnd selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} ssd={startselectedDay} />
+              <Tab.Panel >
+                <CalenderEnd selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} ssd={startselectedDay} setSsd={setstartSelectedDay} />
                 <Time hourSelected={endTimehr} sethourSelected={setendTimehr} minuteSelected={endTimemin} setminuteSelected={setendTimemin} ampmSelected={endTimeap} setampmSelected={setendTimeap} setTime={setendTime} />
               </Tab.Panel>
             </Tab.Panels>
@@ -166,8 +184,7 @@ export default function Datetimepicker() {
               </button>
             </div>
           </div>
-        </div>}
-      </div>
-    </div>
+        </div> }
+    </>
   );
 }

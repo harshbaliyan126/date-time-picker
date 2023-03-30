@@ -23,7 +23,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, setCurrentMonth, ssd}) {
+export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, setCurrentMonth, ssd, setSsd}) {
 
   const today = startOfToday();
   const colStartClasses = [
@@ -106,7 +106,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
   };
 
   return (
-      <div className="max-w-md mx-auto md:max-w-4xl px-6">
+      <div className="max-w-md mx-auto md:max-w-4xl px-2">
           <div className="md:m-15 ">
             <div className={classNames('flex', bar && 'justify-between', !bar && 'justify-center')} >
               <button className="flex justify-start font-semibold text-gray-900" onClick={handleChooseMonthYear}>
@@ -140,55 +140,56 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid grid-cols-7 mt-2 text-sm mx-1" ref={changeCalender}>
+            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2" ref={changeCalender}>
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
                   className={classNames(
-                    dayIdx === 0 && colStartClasses[getDay(day)],
-                    'py-1.5'
+                    dayIdx === 0 && colStartClasses[getDay(day)]
                   )}
                 > 
+                <div className={classNames( selectedDay && (isBefore(day, selectedDay) && isAfter(day, ssd)) && 'border-x-2 bg-blue-200 border-blue-200',
+                    selectedDay && ssd != null && isEqual(day, selectedDay) && !isEqual(selectedDay, ssd) && 'bgr',
+                     ssd && selectedDay != null && !isEqual(selectedDay, ssd) && isEqual(day, ssd) && 'bgl'
+                    )}>
                   <button
                     type="button"
                     onClick={() => {
-                      if(isAfter(ssd, day)){
-                         setSelectedDay(ssd);
+                      if(ssd && isAfter(ssd, day)){
+                         setSelectedDay(null);
+                         setSsd(day);
                       }
                       else{
                           setSelectedDay(day);
                       }
                     }}
                     className={classNames(
-                      isBefore(day, selectedDay) && isAfter(day, ssd) && 'bg-blue-200',
-                      isAfter(selectedDay, ssd) && isEqual(day, ssd) && !isToday(day) && 'bg-gray-900 text-white',
-                      isEqual(day, ssd) && isToday(day) && 'bg-red-500 text-white',
-                      isEqual(day, selectedDay) && 'text-white',
+                      ssd && isEqual(day, ssd) && !isToday(day) && 'bg-blue-500 text-white font-semibold',
+                      selectedDay && isEqual(day, selectedDay) && 'text-white',
                       !isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        'text-red-500',
-                      !isEqual(day, selectedDay) &&
+                      isToday(day) &&
+                      'text-red-500',
+                      selectedDay && !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-900',
-                      !isEqual(day, selectedDay) &&
+                      selectedDay && !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-400',
-                      isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
-                      isEqual(day, selectedDay) &&
+                     (isEqual(day, selectedDay) || isEqual(day, ssd)) && isToday(day) && 'bg-red-500 text-white',
+                      selectedDay && isEqual(day, selectedDay) &&
                         !isToday(day) &&
-                        'bg-gray-900',
-                      !isEqual(day, selectedDay) && 'hover:bg-gray-200',
-                      (isEqual(day, selectedDay) || isToday(day)) &&
+                        'bg-blue-500',
+                      selectedDay && ssd && !isEqual(day, selectedDay) && !isEqual(day, ssd) && 'hover:bg-blue-300',
+                      selectedDay && (isEqual(day, selectedDay) || isToday(day)) &&
                         'font-semibold',
-                      'mx-1 flex h-8 w-8 border-2 items-center justify-center rounded-xl' 
+                      'mx-auto my-auto flex h-8 w-8 justify-center items-center rounded-full'  
                     )}
                   >
-                    <time dateTime={format(day, 'yyyy-MM-dd')}>
                       {format(day, 'd')}
-                    </time>
                   </button>
+                  </div>
                 </div>
               ))}
               </div>
