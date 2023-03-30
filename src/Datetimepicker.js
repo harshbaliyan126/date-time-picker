@@ -3,7 +3,7 @@ import { Tab } from '@headlessui/react';
 import CalenderStart from "./CalenderStart";
 import CalenderEnd from "./CalenderEnd"
 import Time from "./Time";
-import  autoAnimate  from '@formkit/auto-animate';
+// import  autoAnimate  from '@formkit/auto-animate';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import {
   format,
@@ -19,38 +19,32 @@ export default function Datetimepicker() {
   const [checktrue, setchecktrue] = useState(false);
   const [checkDateTimePicker, setcheckDateTimePicker] = useState(false);
 
-  const changeRange = useRef(null);
-  const [parent] = useAutoAnimate(/* optional config */)
- // const [ssd, setssd] = useState();
-
-  // useEffect(() => {
-  //   console.log(changeRange);
-  //     changeRange.current && autoAnimate(changeRange.current)
-  // }, [changeRange]);
-
   let today = startOfToday();
-
-  useEffect(() => {
-
-    if(selectedIndex && startselectedDay)
-      setstartCurrentMonth(format(startselectedDay, 'MMM-yyyy'));
-    else if(endselectedDay)
-      setendCurrentMonth(format(endselectedDay, 'MMM-yyyy'));
-
-    if(startselectedDay && endselectedDay &&  format(startselectedDay, 'MM') !== format(endselectedDay, 'MM'))
-      changeRange.current && autoAnimate(changeRange.current)
-    else
-      changeRange.current && autoAnimate(changeRange.current, {
-        duration: 0,
-      })
-   
-  }, [selectedIndex]);
-
-
 
   const [startDate, setstartDate] = useState(false);
   const [startselectedDay, setstartSelectedDay] = useState(null);
   const [startcurrentMonth, setstartCurrentMonth] = useState(format(today, 'MMM-yyyy'));
+
+  const [parent] = useAutoAnimate(/* optional config */)
+
+ useEffect(() => {
+  if(selectedIndex && startselectedDay)
+    setstartCurrentMonth(format(startselectedDay, 'MMM-yyyy'));
+  else if(endselectedDay)
+    setendCurrentMonth(format(endselectedDay, 'MMM-yyyy'));
+    
+  if(!endselectedDay && startselectedDay){
+    setendCurrentMonth(format(startselectedDay, 'MMM-yyyy'));
+    setstartCurrentMonth(format(startselectedDay, 'MMM-yyyy'));
+  }
+
+  if(!startselectedDay && endselectedDay){
+    setendCurrentMonth(format(endselectedDay, 'MMM-yyyy'));
+    setstartCurrentMonth(format(endselectedDay, 'MMM-yyyy'));
+  }
+
+}, [startselectedDay, selectedIndex]);
+ 
 
   const [endDate, setendDate] = useState(false);
   const [endselectedDay, setendSelectedDay] = useState(null);
@@ -159,13 +153,13 @@ export default function Datetimepicker() {
                 <div>End</div> {endselectedDay ? <div>{format(endselectedDay, 'dd/MM/yyyy')}</div> : <div>Please Select</div>}
               </Tab>
             </Tab.List>
-            <Tab.Panels className="mt-2" ref={changeRange}> 
+            <Tab.Panels className="mt-2"> 
               <Tab.Panel >
-                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} sed={endselectedDay} setSed={setendSelectedDay} setSelectedIndex={setSelectedIndex}/>
+                <CalenderStart selectedDay={startselectedDay} setSelectedDay={setstartSelectedDay} currentMonth={startcurrentMonth} setCurrentMonth={setstartCurrentMonth} sed={endselectedDay} setSed={setendSelectedDay} setSelectedIndex={setSelectedIndex} setendCurrentMonth={setendCurrentMonth}/>
                 <Time hourSelected={startTimehr} sethourSelected={setstartTimehr} minuteSelected={startTimemin} setminuteSelected={setstartTimemin} ampmSelected={startTimeap} setampmSelected={setstartTimeap} setTime={setstartTime} />
               </Tab.Panel>
               <Tab.Panel >
-                <CalenderEnd selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} ssd={startselectedDay} setSsd={setstartSelectedDay} />
+                <CalenderEnd selectedDay={endselectedDay} setSelectedDay={setendSelectedDay} currentMonth={endcurrentMonth} setCurrentMonth={setendCurrentMonth} ssd={startselectedDay} setSsd={setstartSelectedDay} setstartCurrentMonth={setstartCurrentMonth}/>
                 <Time hourSelected={endTimehr} sethourSelected={setendTimehr} minuteSelected={endTimemin} setminuteSelected={setendTimemin} ampmSelected={endTimeap} setampmSelected={setendTimeap} setTime={setendTime} />
               </Tab.Panel>
             </Tab.Panels>

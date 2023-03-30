@@ -1,6 +1,6 @@
-import { useAutoAnimate } from '@formkit/auto-animate/react';
+// import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
-import {
+import { 
     startOfToday,
     add,
     eachDayOfInterval,
@@ -23,7 +23,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth,sed , setSed, setSelectedIndex}) {
+export default function CalenderStart({selectedDay, setSelectedDay, currentMonth, setCurrentMonth,sed , setSed, setSelectedIndex , setendCurrentMonth}) {
 
   const today = startOfToday();
   const colStartClasses = [
@@ -42,8 +42,8 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   const [currm, setcurrm] = useState(format(today, 'LLL'));
   const [bar, setbar] = useState(true);
   const [yearbar, setyearbar] = useState(false);
-  const [changeComponet, enableAnimations] = useAutoAnimate()
-  const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
+  // const [changeComponet, enableAnimations] = useAutoAnimate()
+  // const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 330})
 
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
   
@@ -64,6 +64,8 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
   function previousMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    if(!sed && !selectedDay)
+      setendCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
@@ -87,12 +89,16 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
     let currMonthIdx = arrMonths.indexOf(currMonth);
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: monthIdx - currMonthIdx });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    if(!sed && !selectedDay)
+      setendCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(currMonth);
   }
 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
+    if(!sed && !selectedDay)
+      setendCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
@@ -104,6 +110,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
     // setbar(false)
     setyearbar(true)  
   };
+  
 
   return (
       <div className="max-w-md mx-auto md:max-w-4xl px-2">
@@ -129,7 +136,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
               </button>
               </div> }
             </div>
-            <div ref={changeComponet}>
+            <div>
             { selectCalender && <div >
             <div className="grid grid-cols-7 mt-5 text-xs leading-6 text-center text-gray-500">
               <div className='mx-0.5'>S</div>
@@ -140,7 +147,7 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2 " ref={changeCalender}>
+            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2 " > 
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
@@ -156,11 +163,14 @@ export default function CalenderStart({selectedDay, setSelectedDay, currentMonth
                     type="button"
                     onClick={() => {
                       // setSelectedDay(day);
+                      let nextSed = 0;
                        if(sed && isAfter(day, sed)){
                          setSed(null);
+                         nextSed = 1; 
                       }
                       setSelectedDay(day);
-                      setSelectedIndex(1);
+                      if(nextSed || !sed)
+                        setSelectedIndex(1);
                     }}
                     className={classNames(
                       sed && isEqual(day, sed) && !isToday(day) && 'bg-blue-500 text-white font-semibold',

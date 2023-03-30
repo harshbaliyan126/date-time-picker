@@ -1,4 +1,4 @@
-import { useAutoAnimate } from '@formkit/auto-animate/react';
+// import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import {
     startOfToday,
@@ -17,13 +17,13 @@ import {
     isBefore
   } from 'date-fns'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, setCurrentMonth, ssd, setSsd}) {
+export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, setCurrentMonth, ssd, setSsd , setstartCurrentMonth}) {
 
   const today = startOfToday();
   const colStartClasses = [
@@ -42,8 +42,8 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
   const [currm, setcurrm] = useState(format(today, 'LLL'));
   const [bar, setbar] = useState(true);
   const [yearbar, setyearbar] = useState(false);
-  const [changeComponet, enableAnimations] = useAutoAnimate()
-  const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
+  // const [changeComponet, enableAnimations] = useAutoAnimate()
+  // const [changeCalender, enableAnimationsCalender] = useAutoAnimate({ duration: 100})
 
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
 
@@ -63,6 +63,8 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
 
   function previousMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
+    if(!ssd && !selectedDay)
+      setstartCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(format(firstDayNextMonth, 'LLL'));
   }
@@ -86,6 +88,8 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
     const currMonth = format(firstDayCurrentMonth, 'LLL');
     const currMonthIdx = arrMonths.indexOf(currMonth);
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: monthIdx - currMonthIdx });
+    if(!ssd && !selectedDay)
+      setstartCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(currMonth);
   }
@@ -93,6 +97,8 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+    if(!ssd && !selectedDay) 
+      setstartCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     setcurrm(format(firstDayNextMonth, 'LLL'));
   }
 
@@ -129,7 +135,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
               </button>
               </div> }
             </div>
-            <div ref={changeComponet}>
+            <div >
             { selectCalender && <div >
             <div className="grid grid-cols-7 mt-5 text-xs leading-6 text-center text-gray-500">
               <div>S</div>
@@ -140,7 +146,7 @@ export default function CalenderEnd({selectedDay, setSelectedDay, currentMonth, 
               <div>F</div>
               <div>S</div>
             </div>
-            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2" ref={changeCalender}>
+            <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2">
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
