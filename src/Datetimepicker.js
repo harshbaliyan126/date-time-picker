@@ -141,9 +141,9 @@ export default function Datetimepicker() {
 
   return (
     <>
-      <div className="flex justify-center p-2 m-2">
+      <div className="container-datetimepicker">
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center"
+          className="datetimepicker-btn"
           onClick={() => {
             setcheckDateTimePicker(!checkDateTimePicker);
             changeToOriginal();
@@ -152,38 +152,38 @@ export default function Datetimepicker() {
           }}
         >
           {checktrue && dateTimeRange()}
-          {!checktrue && "Select Date and Time"}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
-            />
-          </svg>
+          {!checktrue && (
+            <div style={{ display: "flex" }}>
+              <span>Select Date and Time</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                style={{ width: "1.5rem", height: "1.5rem" }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                />
+              </svg>{" "}
+            </div>
+          )}
         </button>
       </div>
       {checkDateTimePicker && (
-        <div
-          className="rounded-3xl shadow-2xl w-full max-w-xs mx-auto px-2 py-2"
-          ref={parent}
-        >
+        <div className="datetimepicker-popup" ref={parent}>
           <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-            <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1 ">
+            <Tab.List className="datetimepicker-tab">
               <Tab
                 className={({ selected }) =>
                   classNames(
-                    "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700",
-                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                    "datetimepicker-tab-btn",
                     selected
-                      ? "bg-white shadow"
-                      : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
+                      ? "datetimepicker-tab-btn-selected"
+                      : "datetimepicker-tab-btn-not-selected"
                   )
                 }
               >
@@ -197,11 +197,10 @@ export default function Datetimepicker() {
               <Tab
                 className={({ selected }) =>
                   classNames(
-                    "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700",
-                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                    "datetimepicker-tab-btn",
                     selected
-                      ? "bg-white shadow"
-                      : "text-blue-100 hover:bg-white/[0.12] hover:text-white"
+                      ? "datetimepicker-tab-btn-selected"
+                      : "datetimepicker-tab-btn-not-selected"
                   )
                 }
               >
@@ -257,12 +256,14 @@ export default function Datetimepicker() {
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
-          <div className="flex justify-end pb-4 pr-4">
+          <div className="datetimepicker-set-clear">
             <button
               disabled={disabled}
               className={classNames(
-                "text-white font-bold py-2 px-4 rounded",
-                disabled ? "bg-blue-200" : "bg-blue-500 hover:bg-blue-700"
+                "datetimepicker-set-btn",
+                disabled
+                  ? "datetimepicker-set-btn-disabled"
+                  : "datetimepicker-set-btn-enabled"
               )}
               onClick={handleSetClick}
             >
@@ -270,7 +271,7 @@ export default function Datetimepicker() {
             </button>
             <div className="pl-2">
               <button
-                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                className="datetimepicker-clear-btn"
                 onClick={() => {
                   setcheckDateTimePicker(!checkDateTimePicker);
                   changeToOriginal();

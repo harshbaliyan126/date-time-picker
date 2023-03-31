@@ -136,17 +136,17 @@ export default function CalenderEnd({
   };
 
   return (
-    <div className="max-w-md mx-auto md:max-w-4xl px-2">
-      <div className="md:m-15 ">
+    <div className="container-calender">
+      <div>
         <div
           className={classNames(
-            "flex",
-            bar && "justify-between",
-            !bar && "justify-center"
+            "calender-flex",
+            bar && "calender-flex-justify-between",
+            !bar && "calender-flex-justify-center"
           )}
         >
           <button
-            className="flex justify-start font-semibold text-gray-900"
+            className="calender-month-btn"
             onClick={handleChooseMonthYear}
           >
             {selectCalender
@@ -156,20 +156,26 @@ export default function CalenderEnd({
               : format(firstDayCurrentMonth, "yyyy")}
           </button>
           {bar && (
-            <div className="flex">
+            <div className="calender-flex">
               <button
                 type="button"
                 onClick={yearbar ? previousYear : previousMonth}
-                className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
+                className="calender-month-prev-btn"
               >
-                <ChevronLeftIcon className="w-5 h-5" aria-hidden="true" />
+                <ChevronLeftIcon
+                  style={{ width: "1.25rem", height: "1.25rem" }}
+                  aria-hidden="true"
+                />
               </button>
               <button
                 onClick={yearbar ? nextYear : nextMonth}
                 type="button"
-                className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-900 hover:text-gray-500"
+                className="calender-month-next-btn"
               >
-                <ChevronRightIcon className="w-5 h-5" aria-hidden="true" />
+                <ChevronLeftIcon
+                  style={{ width: "1.25rem", height: "1.25rem" }}
+                  aria-hidden="true"
+                />
               </button>
             </div>
           )}
@@ -177,7 +183,7 @@ export default function CalenderEnd({
         <div>
           {selectCalender && (
             <div>
-              <div className="grid grid-cols-7 mt-5 text-xs leading-6 text-center text-gray-500">
+              <div className="calender-week-days-grid">
                 <div>S</div>
                 <div>M</div>
                 <div>T</div>
@@ -186,7 +192,7 @@ export default function CalenderEnd({
                 <div>F</div>
                 <div>S</div>
               </div>
-              <div className="grid gap-y-1.5 grid-cols-7 text-sm py-2">
+              <div className="calender-month-grid">
                 {days.map((day, dayIdx) => (
                   <div
                     key={day.toString()}
@@ -199,7 +205,7 @@ export default function CalenderEnd({
                         selectedDay &&
                           isBefore(day, selectedDay) &&
                           isAfter(day, ssd) &&
-                          "border-x-2 bg-blue-200 border-blue-200",
+                          "calender-between-start-end",
                         selectedDay &&
                           ssd != null &&
                           isEqual(day, selectedDay) &&
@@ -226,39 +232,40 @@ export default function CalenderEnd({
                           ssd &&
                             isEqual(day, ssd) &&
                             !isToday(day) &&
-                            "bg-blue-500 text-white font-semibold",
+                            "calender-opposite-range-btn",
                           selectedDay &&
                             isEqual(day, selectedDay) &&
-                            "text-white",
+                            "calender-text-white",
                           !isEqual(day, selectedDay) &&
                             isToday(day) &&
-                            "text-red-500",
+                            "calender-text-red-500",
                           selectedDay &&
                             !isEqual(day, selectedDay) &&
                             !isToday(day) &&
+                            !isEqual(day, ssd) &&
                             isSameMonth(day, firstDayCurrentMonth) &&
-                            "text-gray-900",
+                            "calender-text-gray-900",
                           selectedDay &&
                             !isEqual(day, selectedDay) &&
                             !isToday(day) &&
                             !isSameMonth(day, firstDayCurrentMonth) &&
-                            "text-gray-400",
+                            "calender-text-gray-400",
                           (isEqual(day, selectedDay) || isEqual(day, ssd)) &&
                             isToday(day) &&
-                            "bg-red-500 text-white",
+                            "calender-selected-day-today-btn",
                           selectedDay &&
                             isEqual(day, selectedDay) &&
                             !isToday(day) &&
-                            "bg-blue-500",
+                            "calender-bg-blue-500",
                           selectedDay &&
                             ssd &&
                             !isEqual(day, selectedDay) &&
                             !isEqual(day, ssd) &&
-                            "hover:bg-blue-300",
+                            "hover-bg-blue-300",
                           selectedDay &&
                             (isEqual(day, selectedDay) || isToday(day)) &&
-                            "font-semibold",
-                          "mx-auto my-auto flex h-8 w-8 justify-center items-center rounded-full"
+                            "calender-font-semibold",
+                          "calender-day-btn"
                         )}
                       >
                         {format(day, "d")}
@@ -270,7 +277,7 @@ export default function CalenderEnd({
             </div>
           )}
           {selectYear && (
-            <div className="grid grid-cols-3 mt-2 text-sm">
+            <div className="calender-ym-grid">
               {years.map((year, yearIdx) => (
                 <div key={year.toString()}>
                   <button
@@ -282,7 +289,7 @@ export default function CalenderEnd({
                       setyearbar(false);
                       setbar(false);
                     }}
-                    className="hover:bg-gray-200 mx-auto flex h-8 w-8 items-center justify-center rounded-full"
+                    className="calender-select-ym"
                   >
                     {format(year, "yyyy")}
                   </button>
@@ -291,7 +298,7 @@ export default function CalenderEnd({
             </div>
           )}
           {selectMonth && (
-            <div className="grid grid-cols-3 mt-2 text-sm">
+            <div className="calender-ym-grid">
               {arrMonths.map((month) => (
                 <div key={month}>
                   <button
@@ -302,12 +309,7 @@ export default function CalenderEnd({
                       setSelectCalender(!selectCalender);
                       setbar(true);
                     }}
-                    className={classNames(
-                      month !== currm && "hover:bg-gray-200",
-                      ((month === currm || month === format(today, "LLL")) &&
-                        "font-semibold",
-                      "mx-auto flex h-8 w-8 items-center justify-center rounded-full")
-                    )}
+                    className="calender-select-ym"
                   >
                     {month}
                   </button>
