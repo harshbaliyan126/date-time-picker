@@ -187,11 +187,15 @@ export default function Datetimepicker() {
                   )
                 }
               >
-                <div>Start</div>{" "}
+                <div style={{ fontWeight: "540", marginBottom: "4px" }}>
+                  Start
+                </div>{" "}
                 {startselectedDay ? (
-                  <div>{format(startselectedDay, "dd/MM/yyyy")}</div>
+                  <div style={{ fontWeight: "540" }}>
+                    {format(startselectedDay, "dd/MM/yyyy")}
+                  </div>
                 ) : (
-                  <div>Please Select</div>
+                  <div style={{ fontWeight: "540" }}>Please Select</div>
                 )}
               </Tab>
               <Tab
@@ -204,11 +208,15 @@ export default function Datetimepicker() {
                   )
                 }
               >
-                <div>End</div>{" "}
+                <div style={{ fontWeight: "540", marginBottom: "4px" }}>
+                  End
+                </div>{" "}
                 {endselectedDay ? (
-                  <div>{format(endselectedDay, "dd/MM/yyyy")}</div>
+                  <div style={{ fontWeight: "540" }}>
+                    {format(endselectedDay, "dd/MM/yyyy")}
+                  </div>
                 ) : (
-                  <div>Please Select</div>
+                  <div style={{ fontWeight: "540" }}>Please Select</div>
                 )}
               </Tab>
             </Tab.List>

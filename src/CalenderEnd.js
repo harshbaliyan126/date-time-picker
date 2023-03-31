@@ -172,7 +172,7 @@ export default function CalenderEnd({
                 type="button"
                 className="calender-month-next-btn"
               >
-                <ChevronLeftIcon
+                <ChevronRightIcon
                   style={{ width: "1.25rem", height: "1.25rem" }}
                   aria-hidden="true"
                 />
