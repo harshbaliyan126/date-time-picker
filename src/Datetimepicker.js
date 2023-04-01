@@ -14,6 +14,8 @@ export default function Datetimepicker() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [checktrue, setchecktrue] = useState(false);
   const [checkDateTimePicker, setcheckDateTimePicker] = useState(false);
+  const [checktimeselected, setchecktimeselected] = useState(false);
+  const [checktimeset, setchecktimeset] = useState(false);
 
   let today = startOfToday();
 
@@ -24,6 +26,7 @@ export default function Datetimepicker() {
   );
 
   const [parent] = useAutoAnimate(/* optional config */);
+  const [child] = useAutoAnimate(/* optional config */);
 
   useEffect(() => {
     if (selectedIndex && startselectedDay)
@@ -90,6 +93,19 @@ export default function Datetimepicker() {
 
     if (start === end && s_time > e_time) setendTime(startTime);
     setchecktrue(true);
+    setchecktimeset(false);
+  };
+
+  const handletimesetClick = () => {
+    setchecktimeset(true);
+    setchecktimeselected(false);
+  };
+
+  const handletimeclearclick = () => {
+    setchecktimeset(false);
+    setchecktimeselected(false);
+    setstartTime("12:00 AM");
+    setendTime("12:00 AM");
   };
 
   const changeToOriginal = () => {
@@ -107,6 +123,7 @@ export default function Datetimepicker() {
     setendTimemin("00");
     setstartTimeap("AM");
     setendTimeap("AM");
+    setchecktimeset(false);
   };
 
   const dateTimeRange = () => {
@@ -137,7 +154,8 @@ export default function Datetimepicker() {
     return `${diffInDays} days : ${diffInHours} hours : ${diffInMinutes} minutes`;
   };
 
-  const disabled = startselectedDay && endselectedDay ? false : true;
+  const disabled =
+    startselectedDay && checktimeset && endselectedDay ? false : true;
 
   return (
     <>
@@ -149,6 +167,7 @@ export default function Datetimepicker() {
             changeToOriginal();
             setSelectedIndex(0);
             setchecktrue(false);
+            setchecktimeset(false);
           }}
         >
           {checktrue && dateTimeRange()}
@@ -232,15 +251,6 @@ export default function Datetimepicker() {
                   setSelectedIndex={setSelectedIndex}
                   setendCurrentMonth={setendCurrentMonth}
                 />
-                <Time
-                  hourSelected={startTimehr}
-                  sethourSelected={setstartTimehr}
-                  minuteSelected={startTimemin}
-                  setminuteSelected={setstartTimemin}
-                  ampmSelected={startTimeap}
-                  setampmSelected={setstartTimeap}
-                  setTime={setstartTime}
-                />
               </Tab.Panel>
               <Tab.Panel>
                 <CalenderEnd
@@ -252,18 +262,100 @@ export default function Datetimepicker() {
                   setSsd={setstartSelectedDay}
                   setstartCurrentMonth={setstartCurrentMonth}
                 />
-                <Time
-                  hourSelected={endTimehr}
-                  sethourSelected={setendTimehr}
-                  minuteSelected={endTimemin}
-                  setminuteSelected={setendTimemin}
-                  ampmSelected={endTimeap}
-                  setampmSelected={setendTimeap}
-                  setTime={setendTime}
-                />
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
+          <div>
+            <button
+              className="time-select-btn"
+              onClick={() => {
+                setchecktimeselected(!checktimeselected);
+              }}
+            >
+              {!checktimeset ? (
+                <div>Please select time</div>
+              ) : (
+                <div>
+                  {startTime} - {endTime}
+                </div>
+              )}
+            </button>
+            {checktimeselected && (
+              <div className="timepicker-popup" ref={child}>
+                <Tab.Group>
+                  <Tab.List className="datetimepicker-tab">
+                    <Tab
+                      className={({ selected }) =>
+                        classNames(
+                          "datetimepicker-tab-btn",
+                          selected
+                            ? "datetimepicker-tab-btn-selected"
+                            : "datetimepicker-tab-btn-not-selected"
+                        )
+                      }
+                    >
+                      <div style={{ fontWeight: "540", marginBottom: "4px" }}>
+                        Start
+                      </div>
+                      <div style={{ fontWeight: "540" }}>{startTime}</div>
+                    </Tab>
+                    <Tab
+                      className={({ selected }) =>
+                        classNames(
+                          "datetimepicker-tab-btn",
+                          selected
+                            ? "datetimepicker-tab-btn-selected"
+                            : "datetimepicker-tab-btn-not-selected"
+                        )
+                      }
+                    >
+                      <div style={{ fontWeight: "540", marginBottom: "4px" }}>
+                        End
+                      </div>
+                      <div style={{ fontWeight: "540" }}>{endTime}</div>
+                    </Tab>
+                  </Tab.List>
+                  <Tab.Panels className="mt-2">
+                    <Tab.Panel>
+                      <Time
+                        hourSelected={startTimehr}
+                        sethourSelected={setstartTimehr}
+                        minuteSelected={startTimemin}
+                        setminuteSelected={setstartTimemin}
+                        ampmSelected={startTimeap}
+                        setampmSelected={setstartTimeap}
+                        setTime={setstartTime}
+                      />
+                    </Tab.Panel>
+                    <Tab.Panel>
+                      <Time
+                        hourSelected={endTimehr}
+                        sethourSelected={setendTimehr}
+                        minuteSelected={endTimemin}
+                        setminuteSelected={setendTimemin}
+                        ampmSelected={endTimeap}
+                        setampmSelected={setendTimeap}
+                        setTime={setendTime}
+                      />
+                    </Tab.Panel>
+                  </Tab.Panels>
+                </Tab.Group>
+                <div className="datetimepicker-set-clear" on>
+                  <button className="time-set-btn" onClick={handletimesetClick}>
+                    Set
+                  </button>
+                  <div className="pl-2">
+                    <button
+                      className="datetimepicker-clear-btn"
+                      onClick={handletimeclearclick}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="datetimepicker-set-clear">
             <button
               disabled={disabled}
